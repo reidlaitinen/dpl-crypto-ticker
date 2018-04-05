@@ -1,0 +1,44 @@
+create-repack-app crypto-ticker --full
+
+rails g model coin cmc_id name symbol price last_fetched:datetime
+rails g model watched_coin user:belongs_to coin:belongs_to initial_price
+
+in user.rb:
+
+  has_many :watched_coins, dependent: :destroy
+  has_many :coins, through: :watched_coins
+
+  ^^^ This sets up the through table relationship, so we can just do "user.coins"
+
+then in coin.rb:
+
+  has_many :watched_coins, dependent: :destroy
+  has_many :users, through: :watched_coins
+
+  ^^^ This completes the through-table relationship, so coin has_many users, and user has_many coins
+
+rails g controller api/coins index create show update destroy --skip-routes
+
+added gems:
+  pry
+  rack-cors
+  httparty
+
+before_action :authenticate_user!
+  ^^^ ALLOWS THE USE OF current_user
+
+match = res[0].with_indifferent_access
+  lets you use a string or a symbol to access a key in a hash
+
+building actions now. we're gonna let them handle api calls.
+
+build some sweet charts with ReCharts!
+
+yarn add recharts
+
+============= DAY 2 (Wed)
+
+create-react-native-app CryptoTicker
+
+simulator not working. I'm not going to update xcode right now.
+
